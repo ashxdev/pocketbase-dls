@@ -1,0 +1,30 @@
+server {
+    listen 80;
+    server_name pb.dance-line.studio www.pb.dance-line.studio;
+    client_max_body_size 10M;
+
+    location / {
+        # check http://nginx.org/en/docs/http/ngx_http_upstream_module.html#keepalive
+        proxy_set_header Connection '';
+        proxy_http_version 1.1;
+        proxy_read_timeout 360s;
+
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+
+        proxy_pass http://127.0.0.1:8090;
+    }
+}
+
+sudo ln -s /etc/nginx/sites-available/pb.dance-line.studio.conf /etc/nginx/sites-enabled/
+
+serve --http="pb.dance-line.studio:80" --https="pb.dance-line.studio:443"
+
+sudo certbot --nginx -d pb.dance-line.studio -d www.pb.dance-line.studio
+
+/lib/systemd/system/pocketbase.service
+
+
+/lib/systemd/system/pocketbase.service
